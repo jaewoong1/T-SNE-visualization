@@ -22,11 +22,14 @@ def visualize_scatter_with_images(xs, ys, images, figsize=(45, 45)):
 
 def load_data():
 
+    ### set the path to the folder !!
+    path = './images'
+
     imgs = []
     tsn = []
-    images = os.listdir('../image')
+    images = os.listdir(path)
     for image in images:
-        image = cv2.imread('../image/'+image)
+        image = cv2.imread(os.path.join(path,image))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = cv2.resize(image, (100, 100))
         tsn.append(np.ravel(image, order='C'))
