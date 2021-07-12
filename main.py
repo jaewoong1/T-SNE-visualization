@@ -7,8 +7,10 @@ import cv2
 from sklearn.manifold import TSNE
 import os
 import time
+import umap
+import argparse
 
-def visualize_scatter_with_images(xs, ys, images, figsize=(45, 45)):
+def visualize_scatter_with_images(args, xs, ys, images, figsize=(45, 45)):
 
     fig, ax = plt.subplots(figsize=figsize)
     artists = []
@@ -18,9 +20,9 @@ def visualize_scatter_with_images(xs, ys, images, figsize=(45, 45)):
         artists.append(ax.add_artist(ab))
     ax.update_datalim([[np.min(xs),np.min(ys)],[np.max(xs),np.max(ys)]])
     ax.autoscale()
-    plt.savefig('tsne.png')
+    plt.savefig(args.save)
 
-def load_data():
+def load_data(args):
 
     ### set the path to the folder !!
     path = './images'
@@ -35,19 +37,30 @@ def load_data():
         tsn.append(np.ravel(image, order='C'))
         imgs.append(image)
 
-    model = TSNE(learning_rate=1)
-    transformed = model.fit_transform(tsn)
-    xs = transformed[:, 0]
-    ys = transformed[:, 1]
+    if args.method == 'tsne':
+        model = TSNE(learning_rate=1)
+        proj = model.fit_transform(tsn)
+    else:
+        proj = umap.UMAP(n_neighbors=5, min_dist=0.3).fit_transform(tsn)
+
+    xs = proj[:, 0]
+    ys = proj[:, 1]
 
     return xs, ys, imgs
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
     a = time.time()
-    xs, ys, imgs = load_data()
+    parser.add_argument('--method', type=str, default='tsne', choices=['tsne', 'umap'],
+                        help='Set the visualization method')
+    parser.add_argument('--save', type=str, default='result.png', help='Save file name')
 
-    visualize_scatter_with_images(xs, ys, images=imgs)
-    print(time.time()-a)
+    args = parser.parse_args()
+    print('Method :', args.method)
+    xs, ys, imgs = load_data(args)
+
+    visualize_scatter_with_images(args, xs, ys, images=imgs)
+    print('Time : %f' % (time.time()-a))
 
 
 
