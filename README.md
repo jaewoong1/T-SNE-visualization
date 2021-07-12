@@ -5,6 +5,6 @@ It takes about 3 minutes for 1000 images.
 
 ## Example
 
-Set the path to the folder containing the images to be visualized ( ex : './images' )
-
+1. Set the path to the folder containing the images to be visualized ( ex : './images' )
+2. run main.py
 
