@@ -24,14 +24,11 @@ def visualize_scatter_with_images(args, xs, ys, images, figsize=(45, 45)):
 
 def load_data(args):
 
-    ### set the path to the folder !!
-    path = './images'
-
     imgs = []
     tsn = []
-    images = os.listdir(path)
+    images = os.listdir(args.path)
     for image in images:
-        image = cv2.imread(os.path.join(path,image))
+        image = cv2.imread(os.path.join(args.path, image))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = cv2.resize(image, (100, 100))
         tsn.append(np.ravel(image, order='C'))
@@ -51,7 +48,8 @@ def load_data(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     a = time.time()
-    parser.add_argument('--method', type=str, default='tsne', choices=['tsne', 'umap'],
+    parser.add_argument('--path', type=str, default='./images', help='Set the path of image folder')
+    parser.add_argument('--method', type=str, default='umap', choices=['tsne', 'umap'],
                         help='Set the visualization method')
     parser.add_argument('--save', type=str, default='result.png', help='Save file name')
 
