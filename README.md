@@ -23,3 +23,5 @@ $ python main.py --method tsne --save result.png
 ```
 $ python main.py --method umap --save result.png
 ```
+
+![result](https://user-images.githubusercontent.com/54341727/125233548-c264b700-e319-11eb-9b92-7d478c068b93.png)
