@@ -14,7 +14,7 @@ import math
 from matplotlib.pyplot import imshow
 import argparse
 
-def visualize_scatter_with_images(args, proj, nx, ny, images, figsize=(45, 45)):
+def visualization(args, proj, nx, ny, images, figsize=(45, 45)):
 
     if args.tile == 'square':
         grid_assignment = rasterfairy.transformPointCloud2D(proj, target=(nx, ny))
@@ -85,7 +85,7 @@ def load_data(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     a = time.time()
-    parser.add_argument('--path', type=str, default='../images', help='Set the path of image folder')
+    parser.add_argument('--path', type=str, default='./images', help='Set the path of image folder')
     parser.add_argument('--tile', type=str, default='square', choices=['square', 'basic'],
                         help='Set the visualization method')
     parser.add_argument('--method', type=str, default='umap', choices=['tsne', 'umap'],
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     print('Method :', args.method)
     proj, imgs, nx, ny = load_data(args)
 
-    visualize_scatter_with_images(args, proj, nx, ny, images=imgs)
+    visualization(args, proj, nx, ny, images=imgs)
     print('Time : %f' % (time.time()-a))
 
 
