@@ -25,4 +25,4 @@ $ python main.py --tile basic --method tsne --save result.png --path ./images
 $ python main.py --tile square --method umap --save result.png --path ./images
 ```
 
-![result](https://user-images.githubusercontent.com/54341727/125378879-7b82ca00-e3ca-11eb-91a8-664e076b70ad.png)
+![result](https://user-images.githubusercontent.com/54341727/125379356-593d7c00-e3cb-11eb-9abc-b827e2b8ffa0.png)
