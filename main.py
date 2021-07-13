@@ -14,21 +14,25 @@ import math
 from matplotlib.pyplot import imshow
 import argparse
 
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 def visualization(args, proj, nx, ny, images, figsize=(45, 45)):
 
+    image_size = 100
+
     if args.tile == 'square':
+        print(nx, ny)
         grid_assignment = rasterfairy.transformPointCloud2D(proj, target=(nx, ny))
-
-        tile_width = 100
-        tile_height = 100
-
+        tile_width = tile_height = image_size
+        print('start')
         full_width = tile_width * nx
         full_height = tile_height * ny
         aspect_ratio = float(tile_width) / tile_height
 
         grid_image = Image.new('RGB', (full_width, full_height))
-
         for img, grid_pos in zip(images, grid_assignment[0]):
+
             idx_x, idx_y = grid_pos
             x, y = tile_width * idx_x, tile_height * idx_y
             tile = Image.open(os.path.join(args.path, img))
@@ -55,7 +59,7 @@ def visualization(args, proj, nx, ny, images, figsize=(45, 45)):
         for x0, y0, i in zip(xs, ys, images):
             image = cv2.imread(os.path.join(args.path, i))
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            image = cv2.resize(image, (100, 100))
+            image = cv2.resize(image, (image_size, image_size))
             img = OffsetImage(image)
             ab = AnnotationBbox(img, (x0, y0), xycoords='data', frameon=False)
             artists.append(ax.add_artist(ab))
@@ -67,7 +71,7 @@ def load_data(args):
 
     tsn = []
     images = os.listdir(args.path)
-    ny = nx = math.ceil(np.sqrt(len(images)))
+    ny = nx = np.sqrt(len(images))
     for image in images:
         image = cv2.imread(os.path.join(args.path, image))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -85,17 +89,17 @@ def load_data(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     a = time.time()
-    parser.add_argument('--path', type=str, default='./images', help='Set the path of image folder')
+    parser.add_argument('--path', type=str, default='../images', help='Set the path of image folder')
     parser.add_argument('--tile', type=str, default='square', choices=['square', 'basic'],
                         help='Set the visualization method')
     parser.add_argument('--method', type=str, default='umap', choices=['tsne', 'umap'],
                         help='Set the visualization method')
-    parser.add_argument('--save', type=str, default='result.png', help='Save file name')
+    parser.add_argument('--save', type=str, default='./result.png', help='Save file name')
 
     args = parser.parse_args()
     print('Method :', args.method)
     proj, imgs, nx, ny = load_data(args)
-
+    print('load complete')
     visualization(args, proj, nx, ny, images=imgs)
     print('Time : %f' % (time.time()-a))
 
