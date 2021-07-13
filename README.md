@@ -9,6 +9,7 @@ It takes about 3 minutes for 1000 images.
 * matplotlib
 * opencv
 * numpy
+* rasterfairy
 
 ## Example
 
